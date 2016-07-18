@@ -21,15 +21,32 @@ import * as viewDatProtocol from './background-process/protocols/view-dat'
 // import * as ipfsProtocol from './background-process/protocols/ipfs'
 
 import * as datDebug from './background-process/networks/dat/debug'
+import url from 'url';
 
 var mainWindow;
 
-protocol.registerStandardSchemes(['dat', 'view-dat']) // must be called before 'ready'
+protocol.registerStandardSchemes(['dat', 'view-dat', 'safe']) // must be called before 'ready'
 app.on('ready', function () {
   // ui
   Menu.setApplicationMenu(Menu.buildFromTemplate(buildMenu(env)));
   windows.setup()
 
+    var _safeHandler = function(req, cb)
+    {
+        const parsed = url.parse(req.url);
+        const tokens = parsed.host.split('.');
+        // We pretend there are only 2 pieces
+        // TODO: be more strict here
+        const service = tokens.length > 1 ? tokens[0] : 'www';
+        const domain = tokens.length > 1 ? tokens[1] : tokens[0];
+        const path = parsed.pathname !== '/' ? parsed.pathname.split('/').slice(1).join('/') : 'index.html';
+        const newUrl = `http://localhost:8100/dns/${service}/${domain}/${encodeURIComponent(decodeURIComponent(path))}`;
+
+        console.log( "New SAFE url", newUrl );
+        cb({ url: newUrl });
+    }
+
+    protocol.registerHttpProtocol('safe', _safeHandler, (err) => { console.log('Registered safe handler:', err); });
   // databases
   sitedata.setup()
   bookmarks.setup()
