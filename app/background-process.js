@@ -37,8 +37,9 @@ app.on('ready', function () {
         const tokens = parsed.host.split('.');
         // We pretend there are only 2 pieces
         // TODO: be more strict here
-        const service = tokens.length > 1 ? tokens[0] : 'www';
-        const domain = tokens.length > 1 ? tokens[1] : tokens[0];
+
+        const service = tokens.length === 2 ? tokens[0] : 'www';
+        const domain = tokens.length === 2 ? tokens[1] : tokens[0];
         const path = parsed.pathname !== '/' ? parsed.pathname.split('/').slice(1).join('/') : 'index.html';
         const newUrl = `http://localhost:8100/dns/${service}/${domain}/${encodeURIComponent(decodeURIComponent(path))}`;
 

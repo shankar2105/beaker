@@ -167,7 +167,7 @@ function render (id, page) {
             titleColumn.innerHTML = r.titleDecorated // use innerHTML so our decoration can show
           else
             titleColumn.textContent = r.title
-          
+
           // selection
           var rowCls = 'result'
           if (i == autocompleteCurrentSelection)
@@ -197,7 +197,7 @@ function render (id, page) {
       <button class="toolbar-btn nav-forward-btn" ${forwardDisabled} onclick=${onClickForward}>
         <span class="icon icon-right-open"></span>
       </button>
-      ${reloadBtn}      
+      ${reloadBtn}
     </div>
     <div class="toolbar-input-group">
       ${archiveBtn}
@@ -228,17 +228,18 @@ function handleAutocompleteSearch (err, results) {
 
   // decorate result with bolded regions
   var searchTerms = v.replace(/[^A-Za-z0-9]/g, ' ').split(' ').filter(Boolean)
-  results.forEach(r => decorateResultMatches(searchTerms, r))  
+  results.forEach(r => decorateResultMatches(searchTerms, r))
 
   // does the value look like a url?
-  var isProbablyUrl = (!v.includes(' ') && (/\.[A-z]/.test(v) || v.includes('://') || v.startsWith('ipfs:/')))
-  var vWithProtocol = v
+  var isProbablyUrl = true
+  // var isProbablyUrl = (!v.includes(' ') && (/\.[A-z]/.test(v) || v.includes('://') || v.startsWith('ipfs:/')|| v.startsWith('safe:')))
+  var vWithProtocol = v;
   if (isProbablyUrl && !v.includes('://') && !v.startsWith('ipfs:/'))
-    vWithProtocol = 'https://'+v
+    vWithProtocol = 'safe://'+v
 
   // set the top results accordingly
   var gotoResult = { url: vWithProtocol, title: 'Go to '+v }
-  var searchResult = { 
+  var searchResult = {
     search: v,
     title: 'DuckDuckGo Search',
     url: 'https://duckduckgo.com/?q=' + v.split(' ').join('+')
@@ -498,6 +499,6 @@ function onClickViewDat (e) {
   var page = getEventPage(e)
   if (page && page.getURL().startsWith('dat://')) {
     let key = (new URL(page.getURL())).host
-    page.loadURL('view-dat://'+key) 
+    page.loadURL('view-dat://'+key)
   }
 }
