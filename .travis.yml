@@ -1,11 +1,9 @@
 language: node_js
 node_js:
-- '6'
-install:
-- npm i
+    - '6'
 script:
-- npm run rebuild
-- npm run release
+    - npm run rebuild
+    - npm run release
 deploy:
   provider: releases
   api_key:
