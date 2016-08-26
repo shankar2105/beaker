@@ -22,9 +22,7 @@
     "rcedit": "^0.5.0"
   },
   "build": {
-    "appId": "com.pfrazee.beaker-browser",
     "category": "public.app-category.productivity",
-    "copyright": "© 2016, Paul Frazee",
     "npmRebuild": false
   },
   "scripts": {
