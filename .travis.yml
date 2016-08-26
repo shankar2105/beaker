@@ -1,6 +1,7 @@
-os:
-    - osx
+# os:
+    # - osx
     # - linux
+sudo: false
 language: node_js
 
 cache:
