@@ -2,6 +2,14 @@ os:
     - osx
     # - linux
 language: node_js
+
+cache:
+  directories:
+  - node_modules
+  - app/node_modules
+  - $HOME/.electron
+  - $HOME/.cache
+  
 node_js:
     - '6'
 env:
