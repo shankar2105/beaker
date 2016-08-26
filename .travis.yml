@@ -1,5 +1,5 @@
 # os:
-    # - osx
+#     - osx
     # - linux
 sudo: false
 language: node_js
@@ -24,11 +24,11 @@ addons:
       
 before_script:
   - npm run rebuild
+  - npm i appdmg
+  - npm i 7zip-bin
     
 script:
-  - npm run release:mac
-  - npm run release:linux
-  - npm run release:windows
+  - npm run release
 before_deploy:
   - export RELEASE_PKG_DMG=$(ls dist/**/*.dmg)
   - export RELEASE_PKG_TAR_GZ=$(ls dist/**/*.tar.gz)
