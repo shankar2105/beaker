@@ -1,6 +1,6 @@
 os:
-    # - osx
-    - linux
+    - osx
+    # - linux
 language: node_js
 node_js:
     - '6'
@@ -14,12 +14,14 @@ addons:
       - g++-4.8
       
 before_script:
-    - npm run rebuild
+  - npm run rebuild
     
 script:
-    - npm run release
+  - npm run release:mac
+  - npm run release:linux
+  - npm run release:windows
 before_deploy:
-  # - export RELEASE_PKG_DMG=$(ls dist/**/*.dmg)
+  - export RELEASE_PKG_DMG=$(ls dist/**/*.dmg)
   - export RELEASE_PKG_TAR_GZ=$(ls dist/**/*.tar.gz)
   - echo "deploying $RELEASE_PKG_DMG to GitHub releases"
 deploy:

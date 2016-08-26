@@ -4,6 +4,8 @@ var argv = require('yargs').argv;
 var os = require('os');
 
 module.exports.os = function () {
+    
+    console.log( "------------------------>", os.platform() );
   switch (os.platform()) {
     case 'darwin':
       return 'osx';
