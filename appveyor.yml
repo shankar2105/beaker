@@ -43,7 +43,7 @@ deploy:
   auth_token:
     secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
   artifacts: 
-    - path: dist/win/*.zip        # upload all exe packages to release assets
+    - path: "dist/win/*.zip"        # upload all exe packages to release assets
   draft: false
   prerelease: true
   on:
