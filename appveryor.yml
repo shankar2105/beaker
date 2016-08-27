@@ -1,1 +1,28 @@
-appveryor.yml
+platform:
+  - x64
+# image: Visual Studio 2013
+# os: unstable
+environment:
+  nodejs_version: "6.3.1"
+  # global:
+cache:
+  - node_modules
+  - app\node_modules
+  - '%APPDATA%\npm-cache'
+  - '%USERPROFILE%\.electron'
+
+install:
+  - node --version
+  - npm install
+  - npm run rebuild
+  # - set npm_config_arch=%PLATFORM:x86=ia32%
+  # - npm install
+# before_build:
+#   - npm run rebuild
+
+# build: off
+# test_script:
+#   - npm config set msvs_version=2013
+#   - npm install --progress false --depth 0
+#   - npm test
+  
