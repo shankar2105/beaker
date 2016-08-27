@@ -5,8 +5,7 @@ image: Visual Studio 2015
 os: unstable
 environment:
   nodejs_version: "6.3.1"
-  # NODE_GYP_DIR: '%USERPROFILE%\.node-gyp'
-  # global:
+
 cache:
   - node_modules
   - app\node_modules
@@ -17,18 +16,10 @@ install:
   - ps: Install-Product node 6.3.1 x64
   - node --version
   - npm --version
-  # - cmd: npm config set -g cafile=package.json
-  # - cmd: npm config set -g strict-ssl=false
   - npm install npm@next -g
-  - npm install node-gyp@3.4.0 -g
-  # - npm install node-ninja -g
   - npm install
-  - npm run rebuild:only
-  - npm run build
-  # - set npm_config_arch=%PLATFORM:x86=ia32%
-  # - npm install
-# before_build:
-#   - npm run rebuild
+  - npm run rebuild
+  # - npm run build
 
 
 build_script:
