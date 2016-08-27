@@ -24,8 +24,7 @@
   "build": {
     "category": "public.app-category.productivity",
     "npmRebuild": false,
-    "linux" : 
-    {
+    "linux" : {
         "target" : [ "deb", "tar.gz", "zip" ]
     },
     "protocols" : ["safe"]
