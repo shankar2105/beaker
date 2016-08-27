@@ -27,6 +27,9 @@
     "linux" : {
         "target" : [ "deb", "tar.gz", "zip" ]
     },
+    "win" : {
+        "target" : "zip"
+    },
     "protocols" : ["safe"]
     
   },

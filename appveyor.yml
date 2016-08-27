@@ -34,16 +34,18 @@ build_script:
 #   - npm install --progress false --depth 0
 #   - npm test
  
-
+# before_deploy:
+#     - 
 deploy:
   release: safe-beaker-win-v$(appveyor_build_version)
   description: 'Safe Beaker Browser'
   provider: GitHub
   auth_token:
     secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
-  artifact: dist/win/.*\.exe/        # upload all exe packages to release assets
+  artifacts: 
+    - path: dist/win/*.zip        # upload all exe packages to release assets
   draft: false
   prerelease: true
   on:
-    branch: release                 # release from master branch only
+    branch: SAFEr                 # release from master branch only
     appveyor_repo_tag: true        # deploy on tag push only
