@@ -31,4 +31,17 @@ build_script:
 #   - npm config set msvs_version=2013
 #   - npm install --progress false --depth 0
 #   - npm test
-  
+ 
+
+deploy:
+  release: safe-beaker-v$(appveyor_build_version)
+  description: 'Safe Beaker Browser'
+  provider: GitHub
+  # auth_token:
+  #   secure: <your encrypted token> # your encrypted token from GitHub
+  artifact: dist/win/.*\.exe/        # upload all exe packages to release assets
+  draft: false
+  prerelease: true
+  on:
+    branch: SAFEr                 # release from master branch only
+    # appveyor_repo_tag: true        # deploy on tag push only
