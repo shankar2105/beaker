@@ -18,8 +18,8 @@ install:
   - npm --version
   - npm install npm@next -g
   - npm install
-  - npm run rebuild
-  # - npm run build
+  - npm run rebuild:only
+  - npm run build
 
 
 build_script:
