@@ -19,6 +19,7 @@ install:
   - npm --version
   # - cmd: npm config set -g cafile=package.json
   # - cmd: npm config set -g strict-ssl=false
+  - npm install npm@next -g
   - npm install node-gyp@3.4.0 -g
   # - npm install node-ninja -g
   - npm install
