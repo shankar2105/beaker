@@ -5,7 +5,7 @@ platform:
 os: unstable
 environment:
   nodejs_version: "6.3.1"
-  NODE_GYP_DIR: '%USERPROFILE%\.node-gyp'
+  # NODE_GYP_DIR: '%USERPROFILE%\.node-gyp'
   # global:
 cache:
   - node_modules
@@ -16,6 +16,8 @@ cache:
 install:
   - ps: Install-Product node 6.3.1
   - node --version
+  - cmd: npm config set -g cafile=package.json
+  - cmd: npm config set -g strict-ssl=false
   # - npm install node-gyp -g
   # - npm install node-ninja -g
   - npm install
