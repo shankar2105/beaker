@@ -53,5 +53,5 @@ deploy:
   file: "${RELEASE_PKG}"
   on:
     repo: joshuef/beaker
-    branch: SAFEr
-    tags:   true
+    branch: release
+    # tags:   true
