@@ -1,7 +1,7 @@
 platform:
   - x64
   
-# image: Visual Studio 2013
+image: Visual Studio 2015
 os: unstable
 environment:
   nodejs_version: "6.3.1"
