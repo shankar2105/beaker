@@ -20,7 +20,12 @@ install:
 # before_build:
 #   - npm run rebuild
 
-build: off
+
+build_script:
+  - node --version
+  - npm --version
+  - npm run release:windows
+# build: off
 # test_script:
 #   - npm config set msvs_version=2013
 #   - npm install --progress false --depth 0
