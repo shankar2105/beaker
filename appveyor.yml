@@ -5,6 +5,7 @@ platform:
 os: unstable
 environment:
   nodejs_version: "6.3.1"
+  NODE_GYP_DIR: '%USERPROFILE%\.node-gyp'
   # global:
 cache:
   - node_modules
@@ -18,7 +19,7 @@ install:
   # - npm install node-gyp -g
   # - npm install node-ninja -g
   - npm install
-  - npm run rebuild
+  - npm run rebuild:only
   - npm run build
   # - set npm_config_arch=%PLATFORM:x86=ia32%
   # - npm install

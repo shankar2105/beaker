@@ -33,7 +33,7 @@ addons:
       - g++-4.8
       
 before_script:
-  - npm run rebuild:linux
+  - npm run rebuild
   # - npm run build
 
 script:
