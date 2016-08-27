@@ -36,6 +36,8 @@ build_script:
 #   - npm install --progress false --depth 0
 #   - npm test
  
+after_build:
+  - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 before_deploy:
     - dir dist
 deploy:
@@ -44,7 +46,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
-  artifact: dist
+  artifact: dist/*-win.zip
   draft: false
   prerelease: true
   on:
