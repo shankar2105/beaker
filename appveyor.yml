@@ -5,7 +5,9 @@ image: Visual Studio 2015
 os: unstable
 environment:
   nodejs_version: "6.3.1"
-
+  access_token:
+    secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4
+    
 cache:
   - node_modules
   - app\node_modules
@@ -38,7 +40,7 @@ deploy:
   description: 'Safe Beaker Browser'
   provider: GitHub
   auth_token:
-    secure: 8aea9bcdb010030b51e9934813719fb35f61ef07 # your encrypted token from GitHub
+    secure: ($env:access_token) # your encrypted token from GitHub
   artifact: dist/win/.*\.exe/        # upload all exe packages to release assets
   draft: false
   prerelease: true
