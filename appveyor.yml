@@ -42,9 +42,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
-  artifacts: 
-  - path: dist/win/*.zip
-    name: safe-beaker-browser          # upload all exe packages to release assets
+  artifact: dist/win/*.zip
   draft: false
   prerelease: true
   on:
