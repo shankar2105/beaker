@@ -37,8 +37,8 @@ deploy:
   release: safe-beaker-v$(appveyor_build_version)
   description: 'Safe Beaker Browser'
   provider: GitHub
-  # auth_token:
-  #   secure: <your encrypted token> # your encrypted token from GitHub
+  auth_token:
+    secure: 8aea9bcdb010030b51e9934813719fb35f61ef07 # your encrypted token from GitHub
   artifact: dist/win/.*\.exe/        # upload all exe packages to release assets
   draft: false
   prerelease: true
