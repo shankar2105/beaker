@@ -55,3 +55,9 @@ deploy:
     repo: joshuef/beaker
     branch: release
     # tags:   true
+
+
+notifications:
+  email:
+    on_success: [change] # default: change
+    on_failure: [change] # default: always

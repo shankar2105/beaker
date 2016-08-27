@@ -1,12 +1,14 @@
 platform:
   - x64
-  
+
 image: Visual Studio 2015
 os: unstable
 environment:
   nodejs_version: "6.3.1"
   # access_token:
   #   secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4
+
+skip_tags: true
     
 cache:
   - node_modules
@@ -42,9 +44,9 @@ deploy:
   provider: GitHub
   auth_token:
     secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
-  artifact: dist/win/*.zip
+  artifact: dist/*.zip
   draft: false
   prerelease: true
   on:
     branch: SAFEr                 # release from master branch only
-    # appveyor_repo_tag: true        # deploy on tag push only
+    appveyor_repo_tag:  false        # deploy on tag push only
