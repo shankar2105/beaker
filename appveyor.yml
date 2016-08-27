@@ -49,7 +49,8 @@ deploy:
   description: 'Safe Beaker Browser'
   provider: GitHub
   auth_token:
-    secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
+    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+ # your encrypted token from GitHub
   artifact: '*.zip'
   draft: false
   prerelease: true
