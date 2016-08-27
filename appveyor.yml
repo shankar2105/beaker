@@ -36,6 +36,10 @@ build_script:
 #   - npm install --progress false --depth 0
 #   - npm test
  
+artifacts: 
+    - path: dist/*-win.zip
+ 
+ 
 after_build:
   - ps: Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 before_deploy:
@@ -46,7 +50,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: HEQy5YZG7sRPx3f1lWg2/gCBCbjf3oPL2C4SYrdFxToZmOdwG8l1o+X35M2bUGl4 # your encrypted token from GitHub
-  artifacts: 'dist/SAFE Beaker Browser-0.2.0-win.zip'
+  artifact: '*.zip'
   draft: false
   prerelease: true
   on:
