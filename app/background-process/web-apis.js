@@ -1,10 +1,7 @@
 import { ipcMain } from 'electron'
-import beakerBrowser from './api-manifests/browser'
-import beakerBookmarks from './api-manifests/bookmarks'
-import beakerDownloads from './api-manifests/downloads'
-import beakerHistory from './api-manifests/history'
-import beakerSitedata from './api-manifests/sitedata'
+
 import * as plugins from './plugins'
+import * as beakerAPIs from './beaker-apis'
 
 // exported api
 // =
@@ -15,13 +12,7 @@ export function setup () {
   ipcMain.on('get-web-api-manifests', (event, scheme) => {
     // hardcode the beaker: scheme, since that's purely for internal use
     if (scheme == 'beaker:') {
-      event.returnValue = { 
-        beakerBrowser,
-        beakerBookmarks,
-        beakerDownloads,
-        beakerHistory,
-        beakerSitedata
-      }
+      event.returnValue = beakerAPIs.getAPIs(scheme)
       return
     }
 
