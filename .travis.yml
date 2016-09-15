@@ -33,7 +33,7 @@ script:
 before_deploy:
   - ls dist
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG=$(ls dist/*.tar.gz); fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG=$(ls dist/safer-*); fi
   - echo "deploying ${RELEASE_PKG} to GitHub releases"
 deploy:
   skip_cleanup: true
