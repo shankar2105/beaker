@@ -32,8 +32,8 @@ script:
 
 before_deploy:
   - ls dist
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKGS=$(ls -m dist/mac/*.dmg); fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKGS=$(ls -m dist/safer-*); fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKGS=$(ls dist/mac/*.dmg); fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKGS=$( ls -1 dist/safer* | tr "\\n" "," | sed 's/\(.*\),/\1/' ); fi
   # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_DEB=$(ls dist/*.deb); fi
   # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_FREEBSD=$(ls dist/*.freebsd); fi
   # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_APPIMG=$(ls dist/*.AppImage); fi
