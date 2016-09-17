@@ -5,8 +5,10 @@ MAINTAINER Josh Wilson <joshuef@gmail.com>
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # make sure apt is up to date
 RUN apt-get update --fix-missing
-RUN apt-get install -y curl
-RUN apt-get install -y build-essential libssl-dev
+RUN apt-get install -y curl \
+            build-essential \
+            libssl-dev \
+            git
 
 
 ENV NVM_DIR /usr/local/nvm
