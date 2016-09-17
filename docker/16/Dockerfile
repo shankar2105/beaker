@@ -35,10 +35,6 @@ RUN git clone https://github.com/joshuef/beaker
 RUN cd beaker && npm i 
 RUN cd beaker/app && npm i 
 
-RUN ls beaker
-RUN ls beaker/app
-RUN ls beaker/app/node_modules 
-
 RUN cd beaker && npm run rebuild
 RUN cd beaker && npm run release:linux
 RUN ls beaker/dist
