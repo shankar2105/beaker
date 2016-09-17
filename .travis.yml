@@ -1,15 +1,15 @@
 sudo: required
-
+dist: trusty
 
 matrix:
   include:
-  - os: linux
-    env: IS_DOCKER=true
-    sudo: required
-    services:
-      - docker
-    before_install:
-      - docker build -t joshuef/beaker ./docker/16
+  # - os: linux
+  #   env: IS_DOCKER=true
+  #   sudo: required
+  #   services:
+  #     - docker
+  #   before_install:
+  #     - docker build -t joshuef/beaker ./docker/16
   - os: osx
     env: IS_OSX=true
  
@@ -44,11 +44,14 @@ before_script:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:mac; fi
-  - if [[ $IS_DOCKER ]]; then docker run -v ${TRAVIS_BUILD_DIR}:/build joshuef/beaker /bin/bash -c "cp -R /beaker/dist/* /build"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
+  # - if [[ $IS_DOCKER ]]; then docker run -v ${TRAVIS_BUILD_DIR}:/build joshuef/beaker /bin/bash -c "cp -R /beaker/dist/* /build"; fi
 
 before_deploy:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
-  - if [[ $IS_DOCKER  ]]; then export RELEASE_PKG="safer*"; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="dist/safer*""; fi
+  # - if [[ $IS_DOCKER  ]]; then export RELEASE_PKG="safer*"; fi
+  # - if [[ $IS_DOCKER  ]]; then sudo chown safer*; fi
   - echo "deploying ${RELEASE_PKG} to GitHub releases"
   
 deploy:
@@ -63,7 +66,7 @@ deploy:
     repo: joshuef/beaker
     branch: release
     tags:   true
-    condition: $IS_DOCKER || $IS_OSX 
+    # condition: $IS_DOCKER || $IS_OSX 
 
 
 notifications:
