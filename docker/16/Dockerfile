@@ -8,7 +8,8 @@ RUN apt-get update --fix-missing
 RUN apt-get install -y curl \
             build-essential \
             libssl-dev \
-            git
+            git \
+            python
 
 
 ENV NVM_DIR /usr/local/nvm
