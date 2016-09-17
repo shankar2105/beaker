@@ -33,6 +33,7 @@ ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 RUN git clone https://github.com/joshuef/beaker
 
 RUN cd beaker && npm i 
+RUN cd beaker/app && npm i 
 
 RUN ls beaker
 RUN ls beaker/app
