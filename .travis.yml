@@ -12,11 +12,6 @@ matrix:
   #     - docker build -t joshuef/beaker ./docker/16
   - os: osx
     env: IS_OSX=true
- 
-
-# os: 
-#   - linux
-#   - osx
 
 node_js:
     - '6.3.1'
