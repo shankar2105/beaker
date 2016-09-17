@@ -28,7 +28,7 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # Clone project from github, compile. rejoice
-RUN RUN git clone https://github.com/joshuef/beaker \
+RUN git clone https://github.com/joshuef/beaker \
     && cd beaker \
     && npm i \
     && npm run rebuild \
