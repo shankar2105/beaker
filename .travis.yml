@@ -45,7 +45,7 @@ before_script:
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:mac; fi
   # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" && $IS_DOCKER ]]; then docker run -v ./:/build joshuef/beaker /bin/bash -c "cp /beaker/dist/* /build"; fi
+  - if [[ $IS_DOCKER ]]; then docker run -v ./:/build joshuef/beaker /bin/bash -c "cp /beaker/dist/* /build"; fi
 # - docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
 
 before_deploy:

@@ -41,3 +41,4 @@ RUN ls beaker/app/node_modules
 
 RUN cd beaker && npm run rebuild
 RUN cd beaker && npm run release:linux
+RUN ls beaker/dist
