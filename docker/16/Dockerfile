@@ -39,5 +39,5 @@ RUN ls beaker
 RUN ls beaker/app
 RUN ls beaker/app/node_modules 
 
-RUN cd beaker && npm run rebuild \
-    && npm run release:linux
+RUN cd beaker && npm run rebuild
+RUN cd beaker && npm run release:linux

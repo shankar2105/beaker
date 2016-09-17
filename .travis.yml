@@ -51,6 +51,8 @@ script:
 before_deploy:
   - if [[ $IS_DOCKER ]]; then echo "ITS DOCKKKEERRRR"; fi
   - if [[ $IS_OSX ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
+  - if [[ $IS_DOCKER  ]]; then ls; fi
+  - if [[ $IS_DOCKER  ]]; then ls dist; fi
   - if [[ $IS_DOCKER  ]]; then export RELEASE_PKG="dist/safer*"; fi
   - echo "deploying ${RELEASE_PKGS} to GitHub releases"
   
