@@ -44,7 +44,7 @@ script:
 
 before_deploy:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="dist/safer*""; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="dist/safer*"; fi
   # - if [[ $IS_DOCKER  ]]; then export RELEASE_PKG="safer*"; fi
   # - if [[ $IS_DOCKER  ]]; then sudo chown safer*; fi
   - echo "deploying ${RELEASE_PKG} to GitHub releases"
