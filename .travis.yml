@@ -6,9 +6,9 @@ matrix:
   - os: linux
     sudo: required
     services:
-    - docker
+      - docker
     before_install:
-    - docker build -t joshuef/beaker ./docker/16
+      - docker build -t joshuef/beaker ./docker/16
   - os: osx
  
 
@@ -42,9 +42,12 @@ before_script:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:mac; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker run -v ./:/build joshuef/beaker /bin/bash -c "cp /beaker/dist/* /build"; fi
+# - docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
 
 before_deploy:
+  - if [[ "$IS_DOCKER" ]]; then echo "ITS DOCKKKEERRRR"; fi
   - ls dist
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export RELEASE_PKG=$(ls dist/mac/*.dmg); fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export RELEASE_PKG="dist/safer*"; fi
