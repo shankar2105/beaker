@@ -34,8 +34,9 @@ RUN git clone https://github.com/joshuef/beaker \
     && cd beaker \
     && npm i 
 
-RUN ls app \
-    && ls app/node_modules 
+RUN ls 
+RUN ls app
+RUN ls app/node_modules 
 
 RUN npm run rebuild \
     && npm run release:linux
