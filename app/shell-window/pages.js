@@ -43,6 +43,12 @@ export function create (opts) {
   } else
     opts = {}
 
+    //prevents links to new pages
+    if( url && url.indexOf( 'http' ) > -1)
+    {
+        return;
+    }
+
   // create page object
   var id = (Math.random()*1000|0) + Date.now()
   var page = {
@@ -81,12 +87,44 @@ export function create (opts) {
 
     // wrap webview loadURL to set the `loadingURL`
     loadURL: function (url, opts) {
+        page.webContents = page.webviewEl.getWebContents();
+        let webContents = page.webContents ;
+        if( webContents )
+        {
+            let session = webContents.session;
+            let filter = {
+                urls: ['https://*/*', 'http://*/*']
+            }
+            session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+                callback({cancel: true, requestHeaders: details.requestHeaders})
+            });
+            
+            let safeFilter = {
+                urls: ['safe://*/*']
+                
+            }
+            
+            session.webRequest.onBeforeSendHeaders(safeFilter, (details, callback) => {
+                console.log( 'SAFE HEADERS???',details.requestHeaders );
+                callback({ requestHeaders: details.requestHeaders })
+            });
+        }
+        
+        
+        
+        if( url && url.indexOf( 'http' ) > -1)
+        {
+            return;
+        }
       // reset some state
       page.isReceivingAssets = false
 
       // set and go
       page.loadingURL = url
       page.isGuessingTheURLScheme = opts && opts.isGuessingTheScheme
+      
+      
+          //prevents links to new pages
       page.webviewEl.loadURL(url)
     },
 
@@ -132,19 +170,23 @@ export function create (opts) {
     ['send'],
 
     ['findInPage'],
-    ['stopFindInPage']
+    ['stopFindInPage'],
+    ['getWebContents']
   ]).forEach(methodSpec => {
     var name = methodSpec[0]
     var defaultReturn = methodSpec[1]
     page[name] = (...args) => {
       if (page.isWebviewReady)
-        return page.webviewEl[name].apply(page.webviewEl, args)
+        {
+            // console.log( "aye here then", page.webviewEl.getWebContents() );
+            return page.webviewEl[name].apply(page.webviewEl, args)
+        }
       return defaultReturn
     }
   })
   hide(page) // hidden by default
   webviewsDiv.appendChild(page.webviewEl)
-
+  
   // emit
   events.emit('update')
   events.emit('add', page)
@@ -364,7 +406,15 @@ function onNewWindow (e) {
 // we can set the URL now, and update the navbar, to get quick response from the page
 // (if entered by the user in the URL bar, this wont emit, but the loadURL() wrapper will set it)
 function onWillNavigate (e) {
-  var page = getByWebview(e.target)
+    var page = getByWebview(e.target)
+    //prevents links to new pages
+    if( e.url && e.url.indexOf( 'http' ) > -1)
+    {
+        e.target.stop();
+        e.target.loadURL( DEFAULT_URL );
+        return;
+    }
+    
   if (page) {
     // reset some state
     page.isReceivingAssets = false
@@ -542,8 +592,16 @@ function hide (page) {
 
 function createWebviewEl (id, url) {
   var el = document.createElement('webview')
+  
   el.dataset.id = id
   el.setAttribute('preload', 'file://'+path.join(remote.app.getAppPath(), 'webview-preload.build.js'))
+  
+      //prevents links to new pages
+      if( url && url.indexOf( 'http' ) > -1)
+      {
+        //   return el;
+          el.setAttribute('src', DEFAULT_URL)
+      }
   el.setAttribute('src', url || DEFAULT_URL)
   return el
 }
