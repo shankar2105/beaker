@@ -141,6 +141,11 @@ function render (id, page) {
         <span class="icon icon-alert"></span>
       </button>`
 
+  var safeAuthBtn = yo`<button class="toolbar-btn nav-cancel-btn" onclick=${onClickShowAuthoriser}>
+        <span class="icon icon-lock"></span>
+        <span class="badge">1</span>
+      </button>`
+
   // `page` is null on initial render
   // and the toolbar should be hidden on initial render
   // and it should be hidden if the page isnt active
@@ -242,7 +247,8 @@ function render (id, page) {
         <span class="icon icon-right-open-big"></span>
       </button>
       ${reloadBtn}      
-      ${safeBtn}      
+      ${safeBtn} 
+      ${safeAuthBtn}     
     </div>
     <div class="toolbar-input-group">
       ${sitePermsNavbarBtn.render()}
@@ -422,6 +428,11 @@ function onClickReload (e) {
 export function onClickToggleSafe ( e )
 {
     pages.toggleSafe();    
+}
+
+function onClickShowAuthoriser (e) {
+  var url = 'shankar://test'
+  pages.setActive(pages.create(url))
 }
 
 function onClickCancel (e) {

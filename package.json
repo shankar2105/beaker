@@ -28,6 +28,16 @@
     "copyright": "© 2016, Josh Wilson",
     "npmRebuild": false,
     "asar": false,
+    "protocols": [    
+      {   
+        "name": "URL",    
+        "schemes": ["http", "https"]    
+      },    
+      {   
+        "name": "SAFE",   
+        "schemes": ["safe", "shankar"]   
+      }
+    ],
     "dmg": {
       "contents": [
         {

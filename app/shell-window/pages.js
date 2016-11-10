@@ -54,6 +54,22 @@ export function create (opts) {
   } else
     opts = {}
 
+  if (url) {
+    console.log('url :: ', url);
+    var authPage = pages.filter(function(page) {
+      console.log('Page URL :: ', page.getURL());
+      if (!page.getURL()) {
+        return;
+      }
+      return new URL(page.getURL()).protocol === 'shankar:';
+    });
+
+    if (new URL(url).protocol === 'shankar:' && authPage.length > 0) {
+      authPage[0].loadURL(url, opts);
+      return authPage[0];
+    }
+  }
+
   // create page object
   var id = (Math.random()*1000|0) + Date.now()
   var page = {

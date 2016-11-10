@@ -9,6 +9,7 @@ export default function () {
 
   // mark the safe protocol as 'secure' to enable all DOM APIs
   webFrame.registerURLSchemeAsSecure('safe');
+  webFrame.registerURLSchemeAsSecure('shankar');
   window.beaker = { version: BEAKER_VERSION }
   var webAPIs = ipcRenderer.sendSync('get-web-api-manifests', window.location.protocol)
   for (var k in webAPIs) {
