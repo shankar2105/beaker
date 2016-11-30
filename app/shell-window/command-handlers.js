@@ -8,7 +8,7 @@ export function setup () {
   ipcRenderer.on('command', function (event, type, arg1, arg2, arg3) {
     var page = pages.getActive()
     switch (type) {
-      case 'file:new-tab':           
+      case 'file:new-tab':      
         var page = pages.create(arg1)
         pages.setActive(page)
         navbar.focusLocation(page)

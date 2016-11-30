@@ -1,4 +1,4 @@
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import EventEmitter from 'events'
 import path from 'path'
 import * as zoom from './pages/zoom'
@@ -55,9 +55,11 @@ export function create (opts) {
     opts = {}
 
   if (url) {
-    console.log('url :: ', url);
+    console.log('CREATE :: ', url, (new Date()).getTime());
+    var ipcReturn = ipcRenderer.sendSync('is-auth-valid', new URL(url).protocol);
+    console.log('ipcReturn :: ', ipcReturn);
+    
     var authPage = pages.filter(function(page) {
-      console.log('Page URL :: ', page.getURL());
       if (!page.getURL()) {
         return;
       }
@@ -69,6 +71,15 @@ export function create (opts) {
       return authPage[0];
     }
   }
+
+  // if(url) {
+  //   console.log('CREATE :: ', url, new Date());
+  //   var urlObj = new URL(url);
+  //   if (urlObj.protocol === 'shankar:') {
+  //     navbar.onClickShowAuthoriser();
+  //     return activePage;
+  //   }
+  // }
 
   // create page object
   var id = (Math.random()*1000|0) + Date.now()

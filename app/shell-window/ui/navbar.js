@@ -141,7 +141,7 @@ function render (id, page) {
         <span class="icon icon-alert"></span>
       </button>`
 
-  var safeAuthBtn = yo`<button class="toolbar-btn nav-cancel-btn" onclick=${onClickShowAuthoriser}>
+  var safeAuthBtn = yo`<button id="safeAuthBtn" class="toolbar-btn nav-cancel-btn" onclick=${onClickShowAuthoriser}>
         <span class="icon icon-lock"></span>
         <span class="badge">1</span>
       </button>`
@@ -430,9 +430,11 @@ export function onClickToggleSafe ( e )
     pages.toggleSafe();    
 }
 
-function onClickShowAuthoriser (e) {
-  var url = 'shankar://test'
-  pages.setActive(pages.create(url))
+export function onClickShowAuthoriser (e) {
+  // var url = 'shankar://test'
+  // pages.setActive(pages.create(url))
+  var d = document.getElementById('safeAuthBtn');
+  console.log('hello world', d)
 }
 
 function onClickCancel (e) {

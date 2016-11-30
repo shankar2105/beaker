@@ -93,7 +93,7 @@ export function setupWebAPIs () {
 // get web API manifests for the given protocol
 export function getWebAPIManifests (scheme) {
   var manifests = {}
-
+  return {'test': protocolModuleNames}
   // massage input
   scheme = scheme.replace(/:/g, '')
 
