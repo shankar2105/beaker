@@ -1,10 +1,10 @@
 {
   "devDependencies": {
-    "asar": "^0.11.0",
+    "asar": "^0.12.3",
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
-    "electron": "1.4.1",
-    "electron-builder": "6.5.2",
+    "electron": "^1.4.10",
+    "electron-builder": "^10.6.1",
     "electron-localshortcut": "^1.0.0",
     "fs-jetpack": "^0.9.0",
     "gulp": "^3.9.0",
@@ -16,9 +16,9 @@
     "into-stream": "^2.0.1",
     "q": "^1.4.1",
     "redux-devtools": "^3.3.1",
-    "rollup": "^0.26.3",
+    "rollup": "^0.36.4",
     "rollup-plugin-babel": "^2.6.1",
-    "yargs": "^4.2.0"
+    "yargs": "^6.5.0"
   },
   "optionalDependencies": {
     "appdmg": "^0.4.5",
