@@ -484,6 +484,19 @@ function onInputLocation (e) {
     clearAutocomplete() // no value, cancel out
 }
 
+function loadSafeAuthPage() {
+  var allPages = pages.getAll();
+  var safeAuthPage = allPages.filter(function(page) {
+    if (!page.getURL()) {
+      return;
+    }
+    return new URL(page.getURL()).protocol === 'safeauth:';
+  });
+  if (safeAuthPage.length > 0) {
+    return pages.setActive(safeAuthPage[0]);
+  }
+}
+
 function onKeydownLocation (e) {
   // on enter
   if (e.keyCode == KEYCODE_ENTER) {
@@ -492,6 +505,14 @@ function onKeydownLocation (e) {
     var page = getEventPage(e)
     if (page) {
       var selection = getAutocompleteSelection()
+
+      // laod safeauth page
+      if (new URL(selection.url).protocol === pages.SAFE_AUTH_SCHEME) {
+        if (pages.handleSafeAuthScheme()) {
+          return
+        }
+      }
+
       page.loadURL(selection.url, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
     }

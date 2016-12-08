@@ -19,6 +19,8 @@ const ERR_INSECURE_RESPONSE = -501
 let webSecurityDisabled = false;
 
 export const DEFAULT_URL = 'beaker:start'
+export const SAFE_AUTH_SCHEME = 'safeauth:'
+export const SAFE_AUTH_DEFAULT_URL = 'safeauth://home'
 
 // globals
 // =
@@ -44,6 +46,19 @@ export function getPinned () {
   return pages.filter(p => p.isPinned)
 }
 
+export function handleSafeAuthScheme() {
+  var safeAuthPage = pages.filter(function(page) {
+    if (!page.getURL()) {
+      return
+    }
+    return new URL(page.getURL()).protocol === SAFE_AUTH_SCHEME
+  });
+  if (safeAuthPage.length > 0) {
+    setActive(safeAuthPage[0]);
+    return safeAuthPage[0];
+  }
+}
+
 export function create (opts) {
   var url
   if (opts && typeof opts == 'object') {
@@ -53,6 +68,14 @@ export function create (opts) {
     opts = {}
   } else
     opts = {}
+
+  // handle safeauth protocol
+  if (url && (new URL(url).protocol === SAFE_AUTH_SCHEME)) {
+    var safeAuthPage = handleSafeAuthScheme();
+    if (safeAuthPage) {
+      return safeAuthPage;
+    }
+  }
 
   // create page object
   var id = (Math.random()*1000|0) + Date.now()

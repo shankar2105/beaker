@@ -72,7 +72,8 @@
     "protocols": {
       "name": "SAFE Network URL",
       "schemes": [
-        "safe"
+        "safe",
+        "safeauth"
       ]
     },
     "linux": {
