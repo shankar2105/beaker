@@ -18,9 +18,10 @@ const ERR_INSECURE_RESPONSE = -501
 
 let webSecurityDisabled = false;
 
+export const SAFE_AUTH_SCHEME = 'safe-auth:'
+export const SAFE_AUTH_DEFAULT_URL = `${SAFE_AUTH_SCHEME}//home`
 export const DEFAULT_URL = 'beaker:start'
-export const SAFE_AUTH_SCHEME = 'safeauth:'
-export const SAFE_AUTH_DEFAULT_URL = 'safeauth://home'
+// export const DEFAULT_URL = SAFE_AUTH_DEFAULT_URL
 
 // globals
 // =
@@ -46,7 +47,31 @@ export function getPinned () {
   return pages.filter(p => p.isPinned)
 }
 
-export function handleSafeAuthScheme() {
+export function parseSafeAuthUrl(url, isClient) {
+  var safeAuthUrl = {}
+  var parsedUrl = new URL(url)
+
+  safeAuthUrl['protocol'] = parsedUrl.protocol
+  safeAuthUrl['action'] = parsedUrl.hostname
+  
+  var data = parsedUrl.pathname.split('/')
+  if (!isClient) {
+    safeAuthUrl['appId'] = data[1]
+    safeAuthUrl['payload'] = data[2]
+  } else {
+    safeAuthUrl['appId'] = parsedUrl.protocol.split('-').slice(-1)[0]
+    safeAuthUrl['payload'] = data[1]
+  }
+  safeAuthUrl['search'] = parsedUrl.search
+  return safeAuthUrl
+}
+
+export function handleSafeAuthScheme(url) {
+  var parsedUrl = parseSafeAuthUrl(url);
+  if (parsedUrl.action === 'auth') {
+    navbar.handleSafeAuthAuthentication(url);
+    return activePage;
+  }
   var safeAuthPage = pages.filter(function(page) {
     if (!page.getURL()) {
       return
@@ -69,9 +94,10 @@ export function create (opts) {
   } else
     opts = {}
 
+  if (url)  
   // handle safeauth protocol
   if (url && (new URL(url).protocol === SAFE_AUTH_SCHEME)) {
-    var safeAuthPage = handleSafeAuthScheme();
+    var safeAuthPage = handleSafeAuthScheme(url);
     if (safeAuthPage) {
       return safeAuthPage;
     }
