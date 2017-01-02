@@ -1,4 +1,4 @@
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import * as pages from '../pages'
 import * as zoom from '../pages/zoom'
 import * as yo from 'yo-yo'
@@ -26,6 +26,43 @@ var sitePermsNavbarBtn = null
 var autocompleteCurrentValue = null
 var autocompleteCurrentSelection = 0
 var autocompleteResults = null // if set to an array, will render dropdown
+
+var isSafeAppAuthenticating = false
+var safeAuthNetworkState = -1
+var safeAuthData = null
+var safeAuthPopupDiv = yo`<div></div>`
+
+ipcRenderer.send('registerSafeNetworkListener');
+ipcRenderer.send('registerOnAuthReq');
+ipcRenderer.send('registerOnContainerReq');
+
+ipcRenderer.on('onNetworkStatus', function(event, status) {
+  safeAuthNetworkState = status
+  update()
+})
+
+ipcRenderer.on('onAuthReq', function(event, data) {
+  if (data) {
+    safeAuthData = JSON.parse(data)
+    showSafeAuthPopup()
+  }
+})
+
+ipcRenderer.on('onContainerReq', function(event, data) {
+  if (data) {
+    safeAuthData = JSON.parse(data)
+    showSafeAuthPopup(true)
+  }
+})
+
+ipcRenderer.on('registerOnReqError', function(event, error) {
+  // show popup
+})
+
+ipcRenderer.on('onAuthDecisionRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  update()
+})
 
 // exported functions
 // =
@@ -103,6 +140,82 @@ export function updateLocation (page) {
   }
 }
 
+export function handleSafeAuthAuthentication(url) {
+  ipcRenderer.send('decryptRequest', url)
+  clearAutocomplete()
+  if (safeAuthNetworkState === -1) {
+    onClickOpenSafeAuthHome()
+  }
+}
+
+function authDecision(isAllowed, isContainerReq) {
+  isSafeAppAuthenticating = true
+  update()
+  if (isContainerReq) {
+    ipcRenderer.send('registerContainerDecision', safeAuthData, isAllowed);
+    return
+  }
+  ipcRenderer.send('registerAuthDecision', safeAuthData, isAllowed);
+}
+
+function onClickAllowBtn(e) {
+  hideSafeAuthPopup()
+  authDecision(true, (e.target.dataset.type === 0))
+}
+
+function onClickDenyBtn(e) {
+  hideSafeAuthPopup()
+  authDecision(false, (e.target.dataset.type === 0))
+}
+
+function hideSafeAuthPopup() {
+  yo.update(safeAuthPopupDiv, yo`<div></div>`)
+}
+
+function showSafeAuthPopup(isContainerReq) {
+  var arrToYo = function(arr) {
+    return arr.map(function(item) {
+      return yo`<span class="list-inner-i">${item}</span>`;
+    })
+  }
+
+  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Accept</button>`
+  var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
+  var popupBase = yo`<div class="popup">
+      <div class="popup-base">
+        <div class="popup-i">
+          <div class="popup-title">SAFE Authenticator</div>
+          <div class="popup-cnt">
+            <div class="popup-cnt-i">
+              <b>${safeAuthData.req.AuthReq.app.name}</b> by <b>${safeAuthData.req.AuthReq.app.vendor}</b> requesting authentication with following permissions
+            </div>
+            <div class="popup-cnt-i">
+              <span class="list">
+                ${
+                  Object.keys(safeAuthData.req.AuthReq.containers).map(function(container) {
+                    if (typeof safeAuthData.req.AuthReq.containers[container] === 'object') {
+                      return yo`<div class="list-i">
+                        <span class="list-title">${container}</span>
+                        ${arrToYo(safeAuthData.req.AuthReq.containers[container])}
+                      </div>`;
+                    }
+                    return yo`<div class="list-i"><span class="list-title">${container}</span></div>`;
+                  })
+                }
+              </span>
+            </div>
+          </div>
+          <div class="popup-foot">
+            ${allowBtn}
+            ${denyBtn}
+          </div>
+        </div>
+      </div>
+  </div>`
+
+  yo.update(safeAuthPopupDiv, popupBase)
+}
+
 // internal helpers
 // =
 
@@ -132,14 +245,27 @@ function render (id, page) {
       </button>`
       
       
-  // render safe btn
-  var safeBtn = (isSafe)
-    ? yo`<button class="toolbar-btn safe-btn-safe" onclick=${onClickToggleSafe}>
+  var safeNetworkStatusBtn = (isSafeAppAuthenticating) 
+    ? yo`<button class="toolbar-btn loading" onclick=${onClickOpenSafeAuthHome}>
+        <span class="icon icon-hourglass"></span>
+      </button>`
+    : yo`<button class="toolbar-btn ${(function() {
+      if (safeAuthNetworkState === 0) {
+        return 'connecting'
+      } else if (safeAuthNetworkState === 1) {
+        return 'connected'
+      } else if (safeAuthNetworkState === 2) {
+        return 'terminated'
+      }
+    })()}" onclick=${onClickOpenSafeAuthHome}>
         <span class="icon icon-rocket"></span>
-      </button>`
-    : yo`<button class="toolbar-btn safe-btn-not-safe" onclick=${onClickToggleSafe}>
-        <span class="icon icon-alert"></span>
-      </button>`
+      </button>` 
+
+  // render safe btn
+  var safeBtn = yo`<span class="safe-btn-safe">
+      ${safeNetworkStatusBtn}
+      ${safeAuthPopupDiv}
+      </span>`
 
   // `page` is null on initial render
   // and the toolbar should be hidden on initial render
@@ -424,6 +550,10 @@ export function onClickToggleSafe ( e )
     pages.toggleSafe();    
 }
 
+function onClickOpenSafeAuthHome(e) {
+  pages.setActive(pages.create(pages.SAFE_AUTH_DEFAULT_URL))
+}
+
 function onClickCancel (e) {
   var page = getEventPage(e)
   if (page)
@@ -492,6 +622,14 @@ function onKeydownLocation (e) {
     var page = getEventPage(e)
     if (page) {
       var selection = getAutocompleteSelection()
+      // laod safeauth page
+      if (new URL(selection.url).protocol === pages.SAFE_AUTH_SCHEME) {
+        if (pages.handleSafeAuthScheme(selection.url)) {
+          e.target.blur()    
+          return
+        }
+      }
+
       page.loadURL(selection.url, { isGuessingTheScheme: selection.isGuessingTheScheme })
       e.target.blur()
     }
