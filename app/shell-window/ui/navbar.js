@@ -42,8 +42,9 @@ ipcRenderer.on('onNetworkStatus', function(event, status) {
 })
 
 ipcRenderer.on('onAuthReq', function(event, data) {
+  console.log('onAuthReq', data);
   if (data) {
-    safeAuthData = JSON.parse(data)
+    safeAuthData = data
     showSafeAuthPopup()
   }
 })
@@ -187,16 +188,16 @@ function showSafeAuthPopup(isContainerReq) {
           <div class="popup-title">SAFE Authenticator</div>
           <div class="popup-cnt">
             <div class="popup-cnt-i">
-              <b>${safeAuthData.req.AuthReq.app.name}</b> by <b>${safeAuthData.req.AuthReq.app.vendor}</b> requesting authentication with following permissions
+              <b>${safeAuthData.AuthReq.app.name}</b> by <b>${safeAuthData.AuthReq.app.vendor}</b> requesting authentication with following permissions
             </div>
             <div class="popup-cnt-i">
               <span class="list">
                 ${
-                  Object.keys(safeAuthData.req.AuthReq.containers).map(function(container) {
-                    if (typeof safeAuthData.req.AuthReq.containers[container] === 'object') {
+                  safeAuthData.AuthReq.containers.map(function(container) {
+                    if (typeof container.access === 'object') {
                       return yo`<div class="list-i">
-                        <span class="list-title">${container}</span>
-                        ${arrToYo(safeAuthData.req.AuthReq.containers[container])}
+                        <span class="list-title">${container.cont_name}</span>
+                        ${arrToYo(container.access)}
                       </div>`;
                     }
                     return yo`<div class="list-i"><span class="list-title">${container}</span></div>`;
