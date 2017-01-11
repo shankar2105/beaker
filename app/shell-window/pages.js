@@ -74,10 +74,9 @@ export function handleSafeAuthScheme(url) {
 
   console.log('parsedUrl', parsedUrl);
   
-  debugger
   if (parsedUrl.action === 'auth') {
     navbar.handleSafeAuthAuthentication(url);
-    return activePage;
+    return activePage || pages[0];
   }
   var safeAuthPage = pages.filter(function(page) {
     if (!page.getURL()) {

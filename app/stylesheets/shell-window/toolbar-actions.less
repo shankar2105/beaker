@@ -107,9 +107,24 @@
           position: relative;
           .popup-title {
             font-size: 15px;
-            line-height: 20px;
+            line-height: 30px;
+            padding-left: 40px;
             padding-bottom: 16px;
             font-weight: 600;
+            position: relative;
+            &:before {
+              content: "";
+              background-image: url(beaker:safe-auth-logo);
+              width: 30px;
+              height: 30px;
+              display: inline-block;
+              background-size: contain;
+              background-position: center;
+              background-repeat: no-repeat;
+              position: absolute;
+              top: 0;
+              left: 0;
+            }
           }
           .popup-cnt {
             margin-bottom: 30px;

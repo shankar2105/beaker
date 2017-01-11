@@ -38,6 +38,9 @@ ipcRenderer.send('registerOnContainerReq');
 
 ipcRenderer.on('onNetworkStatus', function(event, status) {
   safeAuthNetworkState = status
+  if (status === -1) {
+    hideSafeAuthPopup();
+  }
   update()
 })
 
@@ -121,8 +124,7 @@ export function clearAutocomplete () {
 
 export function update (page) {
   // fetch current page, if not given
-  page = page || pages.getActive()
-
+  page = pages.getActive()
   // render
   yo.update(page.navbarEl, render(page.id, page))
 }
@@ -144,6 +146,7 @@ export function updateLocation (page) {
 export function handleSafeAuthAuthentication(url) {
   ipcRenderer.send('decryptRequest', url)
   clearAutocomplete()
+  console.log('pages.getActive()', pages.getActive().getURL())
   if (safeAuthNetworkState === -1) {
     onClickOpenSafeAuthHome()
   }
@@ -179,21 +182,22 @@ function showSafeAuthPopup(isContainerReq) {
       return yo`<span class="list-inner-i">${item}</span>`;
     })
   }
-
-  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Accept</button>`
+  var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
+  var contPara = (safeAuthData.authReq.containers.length === 0) ? 'requesting authorisation' : 'requesting access for following containers';
+
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
         <div class="popup-i">
-          <div class="popup-title">SAFE Authenticator</div>
+          <div class="popup-title">Authorisation request</div>
           <div class="popup-cnt">
             <div class="popup-cnt-i">
-              <b>${safeAuthData.AuthReq.app.name}</b> by <b>${safeAuthData.AuthReq.app.vendor}</b> requesting authentication with following permissions
+              <b>${safeAuthData.authReq.app.name}</b> by <b>${safeAuthData.authReq.app.vendor}</b> ${contPara}
             </div>
             <div class="popup-cnt-i">
               <span class="list">
                 ${
-                  safeAuthData.AuthReq.containers.map(function(container) {
+                  safeAuthData.authReq.containers.map(function(container) {
                     if (typeof container.access === 'object') {
                       return yo`<div class="list-i">
                         <span class="list-title">${container.cont_name}</span>
