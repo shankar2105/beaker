@@ -38,6 +38,7 @@ ipcRenderer.send('registerOnContainerReq');
 
 ipcRenderer.on('onNetworkStatus', function(event, status) {
   safeAuthNetworkState = status
+  console.log('beaker nw state :: ', status)
   if (status === -1) {
     hideSafeAuthPopup();
   }
@@ -53,17 +54,19 @@ ipcRenderer.on('onAuthReq', function(event, data) {
 })
 
 ipcRenderer.on('onContainerReq', function(event, data) {
+  console.log('onContainerReq', data);
   if (data) {
-    safeAuthData = JSON.parse(data)
+    safeAuthData = data
     showSafeAuthPopup(true)
   }
 })
 
-ipcRenderer.on('registerOnReqError', function(event, error) {
-  // show popup
+ipcRenderer.on('onAuthDecisionRes', function(event, data) {
+  isSafeAppAuthenticating = false
+  update()
 })
 
-ipcRenderer.on('onAuthDecisionRes', function(event, data) {
+ipcRenderer.on('onContDecisionRes', function(event, data) {
   isSafeAppAuthenticating = false
   update()
 })
@@ -146,7 +149,6 @@ export function updateLocation (page) {
 export function handleSafeAuthAuthentication(url) {
   ipcRenderer.send('decryptRequest', url)
   clearAutocomplete()
-  console.log('pages.getActive()', pages.getActive().getURL())
   if (safeAuthNetworkState === -1) {
     onClickOpenSafeAuthHome()
   }
@@ -164,12 +166,12 @@ function authDecision(isAllowed, isContainerReq) {
 
 function onClickAllowBtn(e) {
   hideSafeAuthPopup()
-  authDecision(true, (e.target.dataset.type === 0))
+  authDecision(true, (parseInt(e.target.dataset.type, 10) === 0))
 }
 
 function onClickDenyBtn(e) {
   hideSafeAuthPopup()
-  authDecision(false, (e.target.dataset.type === 0))
+  authDecision(false, (parseInt(e.target.dataset.type, 10) === 0))
 }
 
 function hideSafeAuthPopup() {
@@ -182,9 +184,10 @@ function showSafeAuthPopup(isContainerReq) {
       return yo`<span class="list-inner-i">${item}</span>`;
     })
   }
+  var reqKey = isContainerReq ? 'contReq' : 'authReq';
   var allowBtn = yo`<button class="allow-btn" onclick=${onClickAllowBtn} data-type="${isContainerReq ? 0 : 1}">Allow</button>`
   var denyBtn = yo`<button class="deny-btn" onclick=${onClickDenyBtn} data-type="${isContainerReq ? 0 : 1}">Deny</button>`
-  var contPara = (safeAuthData.authReq.containers.length === 0) ? 'requesting authorisation' : 'requesting access for following containers';
+  var contPara = (safeAuthData[reqKey].containers.length === 0) ? 'requesting authorisation' : 'requesting access for following containers';
 
   var popupBase = yo`<div class="popup">
       <div class="popup-base">
@@ -192,12 +195,12 @@ function showSafeAuthPopup(isContainerReq) {
           <div class="popup-title">Authorisation request</div>
           <div class="popup-cnt">
             <div class="popup-cnt-i">
-              <b>${safeAuthData.authReq.app.name}</b> by <b>${safeAuthData.authReq.app.vendor}</b> ${contPara}
+              <b>${safeAuthData[reqKey].app.name}</b> by <b>${safeAuthData[reqKey].app.vendor}</b> ${contPara}
             </div>
             <div class="popup-cnt-i">
               <span class="list">
                 ${
-                  safeAuthData.authReq.containers.map(function(container) {
+                  safeAuthData[reqKey].containers.map(function(container) {
                     if (typeof container.access === 'object') {
                       return yo`<div class="list-i">
                         <span class="list-title">${container.cont_name}</span>
